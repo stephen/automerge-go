@@ -41,7 +41,7 @@
  * \installed_headerfile
  * \brief The type of an item's index.
  */
-enum AMidxType {
+typedef enum AMidxType {
   /**
    * The default tag, not a type signifier.
    */
@@ -54,8 +54,7 @@ enum AMidxType {
    * A 64-bit unsigned integer position.
    */
   AM_IDX_TYPE_POS,
-};
-typedef uint8_t AMidxType;
+} AMidxType;
 
 /**
  * \ingroup enumerations
@@ -63,7 +62,7 @@ typedef uint8_t AMidxType;
  * \installed_headerfile
  * \brief A mark's expansion mode for when bordering text is inserted.
  */
-enum AMmarkExpand {
+typedef enum AMmarkExpand {
   /**
    * Include text inserted at the end offset.
    */
@@ -84,8 +83,7 @@ enum AMmarkExpand {
    * Exclude text inserted at either offset.
    */
   AM_MARK_EXPAND_NONE = 1,
-};
-typedef uint8_t AMmarkExpand;
+} AMmarkExpand;
 
 /**
  * \ingroup enumerations
@@ -93,7 +91,7 @@ typedef uint8_t AMmarkExpand;
  * \installed_headerfile
  * \brief The type of an object.
  */
-enum AMobjType {
+typedef enum AMobjType {
   /**
    * The default tag, not a type signifier.
    */
@@ -110,8 +108,7 @@ enum AMobjType {
    * A list of Unicode graphemes.
    */
   AM_OBJ_TYPE_TEXT,
-};
-typedef uint8_t AMobjType;
+} AMobjType;
 
 /**
  * \ingroup enumerations
@@ -119,7 +116,7 @@ typedef uint8_t AMobjType;
  * \installed_headerfile
  * \brief The status of an API call.
  */
-enum AMstatus {
+typedef enum AMstatus {
   /**
    * Success.
    * \note This tag is unalphabetized so that `0` indicates success.
@@ -133,8 +130,7 @@ enum AMstatus {
    * Failure due to an invalid result.
    */
   AM_STATUS_INVALID_RESULT,
-};
-typedef uint8_t AMstatus;
+} AMstatus;
 
 /**
  * \ingroup enumerations
@@ -142,7 +138,7 @@ typedef uint8_t AMstatus;
  * \installed_headerfile
  * \brief The type of an item's value.
  */
-enum AMvalType {
+typedef enum AMvalType {
   /**
    * An actor identifier value.
    */
@@ -227,8 +223,7 @@ enum AMvalType {
    * A void.
    */
   AM_VAL_TYPE_VOID = (1 << 0),
-};
-typedef uint32_t AMvalType;
+} AMvalType;
 
 /**
  * \struct AMactorId
@@ -258,6 +253,11 @@ typedef struct AMdoc AMdoc;
  */
 typedef struct AMitem AMitem;
 
+/**
+ * \struct AMmark
+ * \installed_headerfile
+ * \brief An association of out-of-bound information with a sequence.
+ */
 typedef struct AMmark AMmark;
 
 /**
@@ -1140,7 +1140,7 @@ size_t AMobjSize(const struct AMdoc *doc, const struct AMobjId *obj_id, const st
  * doc must be a valid pointer to an AMdoc
  * obj_id must be a valid pointer to an AMobjId or std::ptr::null()
  */
-AMobjType AMobjObjType(const struct AMdoc *doc, const struct AMobjId *obj_id);
+enum AMobjType AMobjObjType(const struct AMdoc *doc, const struct AMobjId *obj_id);
 
 /**
  * \memberof AMdoc
@@ -1638,7 +1638,7 @@ struct AMresult *AMlistPutNull(struct AMdoc *doc, const struct AMobjId *obj_id, 
  * doc must be a valid pointer to an AMdoc
  * obj_id must be a valid pointer to an AMobjId or std::ptr::null()
  */
-struct AMresult *AMlistPutObject(struct AMdoc *doc, const struct AMobjId *obj_id, size_t pos, bool insert, AMobjType obj_type);
+struct AMresult *AMlistPutObject(struct AMdoc *doc, const struct AMobjId *obj_id, size_t pos, bool insert, enum AMobjType obj_type);
 
 /**
  * \memberof AMdoc
@@ -1964,7 +1964,7 @@ struct AMresult *AMmapPutNull(struct AMdoc *doc, const struct AMobjId *obj_id, s
  * obj_id must be a valid pointer to an AMobjId or std::ptr::null()
  * key.src must be a byte array of length >= key.count
  */
-struct AMresult *AMmapPutObject(struct AMdoc *doc, const struct AMobjId *obj_id, struct AMbyteSpan key, AMobjType obj_type);
+struct AMresult *AMmapPutObject(struct AMdoc *doc, const struct AMobjId *obj_id, struct AMbyteSpan key, enum AMobjType obj_type);
 
 /**
  * \memberof AMdoc
@@ -2229,7 +2229,7 @@ struct AMresult *AMmarkCreate(struct AMdoc *doc,
                               const struct AMobjId *obj_id,
                               size_t start,
                               size_t end,
-                              AMmarkExpand expand,
+                              enum AMmarkExpand expand,
                               struct AMbyteSpan name,
                               const struct AMitem *value);
 
@@ -2262,7 +2262,7 @@ struct AMresult *AMmarkClear(struct AMdoc *doc,
                              const struct AMobjId *obj_id,
                              size_t start,
                              size_t end,
-                             AMmarkExpand expand,
+                             enum AMmarkExpand expand,
                              struct AMbyteSpan name);
 
 /**
@@ -2427,7 +2427,7 @@ struct AMresult *AMitemFromUint(uint64_t value);
  * # Safety
  * item must be a valid pointer to an AMitem
  */
-AMidxType AMitemIdxType(const struct AMitem *item);
+enum AMidxType AMitemIdxType(const struct AMitem *item);
 
 /**
  * \memberof AMitem
@@ -2618,7 +2618,7 @@ bool AMitemToCounter(const struct AMitem *item, int64_t *value);
  * # Safety
  * item must be a valid pointer to an AMitem
  */
-bool AMitemToDoc(struct AMitem *item, const struct AMdoc **value);
+bool AMitemToDoc(struct AMitem *item, struct AMdoc **value);
 
 /**
  * \memberof AMitem
@@ -2793,7 +2793,7 @@ bool AMitemToUnknown(const struct AMitem *item, struct AMunknownValue *value);
  * # Safety
  * item must be a valid pointer to an AMitem
  */
-AMvalType AMitemValType(const struct AMitem *item);
+enum AMvalType AMitemValType(const struct AMitem *item);
 
 /**
  * \memberof AMitems
@@ -3077,7 +3077,7 @@ size_t AMresultSize(const struct AMresult *result);
  * # Safety
  * result must be a valid pointer to an AMresult
  */
-AMstatus AMresultStatus(const struct AMresult *result);
+enum AMstatus AMresultStatus(const struct AMresult *result);
 
 /**
  * \memberof AMsyncHave
@@ -3094,22 +3094,6 @@ AMstatus AMresultStatus(const struct AMresult *result);
  * sync_have must be a valid pointer to an AMsyncHave
  */
 struct AMresult *AMsyncHaveLastSync(const struct AMsyncHave *sync_have);
-
-/**
- * \memberof AMsyncMessage
- * \brief Gets the changes for the recipient to apply.
- *
- * \param[in] sync_message A pointer to an `AMsyncMessage` struct.
- * \return A pointer to an `AMresult` struct with `AM_VAL_TYPE_CHANGE` items.
- * \pre \p sync_message `!= NULL`
- * \warning The returned `AMresult` struct pointer must be passed to
- *          `AMresultFree()` in order to avoid a memory leak.
- * \internal
- *
- * # Safety
- * sync_message must be a valid pointer to an AMsyncMessage
- */
-struct AMresult *AMsyncMessageChanges(const struct AMsyncMessage *sync_message);
 
 /**
  * \memberof AMsyncMessage
