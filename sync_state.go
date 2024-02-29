@@ -97,15 +97,6 @@ func loadSyncMessage(msg []byte) (*SyncMessage, error) {
 	return item.syncMessage(), nil
 }
 
-// Changes returns any changes included in this SyncMessage
-func (sm *SyncMessage) Changes() []*Change {
-	defer runtime.KeepAlive(sm)
-
-	items := must(wrap(C.AMsyncMessageChanges(sm.cSyncMessage)).items())
-
-	return mapItems(items, func(i *item) *Change { return i.change() })
-}
-
 // Heads gives the heads of the peer that generated the SyncMessage
 func (sm *SyncMessage) Heads() []ChangeHash {
 	defer runtime.KeepAlive(sm)
